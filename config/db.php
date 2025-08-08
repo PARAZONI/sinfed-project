@@ -1,13 +1,14 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";  // Si tu n'as pas de mot de passe pour l'utilisateur root
-$dbname = "sinfed_academy"; // Remplace par le nom de ta base de données
+$servername = getenv('DB_HOST');
+$username = getenv('DB_USER');
+$password = getenv('DB_PASS');
+$dbname = getenv('DB_NAME');
+$port = getenv('DB_PORT');
 
-// Créer la connexion
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+// créer la connexion
+$conn = mysqli_connect($servername, $username, $password, $dbname, $port);
 
-// Vérifier la connexion
+// vérifier la connexion
 if (!$conn) {
     die("La connexion à la base de données a échoué : " . mysqli_connect_error());
 }
