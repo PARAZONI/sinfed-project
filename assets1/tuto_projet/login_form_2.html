@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINFED - Formation en Cybersécurité</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animation d'introduction */
+        .intro-scene {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-out;
+        }
+
+        .character-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .character {
+            position: absolute;
+            left: -300px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 80px;
+            animation: walkIn 3s ease-in-out forwards;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+        }
+
+        .briefcase {
+            position: absolute;
+            left: -250px;
+            top: 60%;
+            transform: translateY(-50%);
+            font-size: 40px;
+            animation: briefcaseWalk 3s ease-in-out forwards;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+
+        @keyframes walkIn {
+            0% {
+                left: -300px;
+                transform: translateY(-50%) scaleX(1);
+            }
+            50% {
+                left: 50%;
+                transform: translateY(-50%) translateX(-50%) scaleX(1);
+            }
+            65% {
+                transform: translateY(-50%) translateX(-50%) scaleX(-1);
+            }
+            100% {
+                left: 50%;
+                transform: translateY(-50%) translateX(-50%) scaleX(-1);
+            }
+        }
+
+        @keyframes briefcaseWalk {
+            0% {
+                left: -250px;
+                transform: translateY(-50%) rotate(10deg);
+            }
+            50% {
+                left: calc(50% + 30px);
+                transform: translateY(-50%) translateX(-50%) rotate(-10deg);
+            }
+            65% {
+                transform: translateY(-50%) translateX(-50%) rotate(0deg);
+            }
+            80% {
+                transform: translateY(-50%) translateX(-50%) rotate(0deg) scale(1);
+            }
+            90% {
+                transform: translateY(20px) translateX(-50%) rotate(0deg) scale(1.1);
+            }
+            100% {
+                left: calc(50% + 30px);
+                transform: translateY(50px) translateX(-50%) rotate(0deg) scale(1);
+            }
+        }
+
+        .speech-bubble {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            opacity: 0;
+            animation: showSpeech 2s 3.5s ease-out forwards;
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid white;
+        }
+
+        @keyframes showSpeech {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0) scale(1);
+            }
+        }
+
+        /* Formulaire principal */
+        .main-container {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease-out;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transform: scale(0.9);
+            animation: formAppear 0.8s 6s ease-out forwards;
+        }
+
+        @keyframes formAppear {
+            0% {
+                transform: scale(0.9) translateY(30px);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cyber-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            position: relative;
+            z-index: 2;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            animation: slideInUp 0.6s ease-out backwards;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 6.2s; }
+        .form-group:nth-child(2) { animation-delay: 6.4s; }
+        .form-group:nth-child(3) { animation-delay: 6.6s; }
+        .form-group:nth-child(4) { animation-delay: 6.8s; }
+        .form-group:nth-child(5) { animation-delay: 7.0s; }
+        .form-group:nth-child(6) { animation-delay: 7.2s; }
+        .form-group:nth-child(7) { animation-delay: 7.4s; }
+        .form-group:nth-child(8) { animation-delay: 7.6s; }
+
+        @keyframes slideInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+            background: linear-gradient(135deg, #2980b9, #3498db);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+            animation: successPop 0.6s ease-out;
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+
+            .character {
+                font-size: 60px;
+            }
+
+            .briefcase {
+                font-size: 30px;
+            }
+        }
+
+        /* Particules d'arrière-plan */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particules d'arrière-plan -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Scène d'introduction -->
+    <div class="intro-scene" id="introScene">
+        <div class="character-container">
+            <div class="character">🕴️</div>
+            <div class="briefcase">💼</div>
+            <div class="speech-bubble">Bonjour ! Découvrez nos formations en cybersécurité</div>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="main-container" id="mainContainer">
+        <div class="container">
+            <div class="header">
+                <div class="cyber-icon">🛡️</div>
+                <h1>SINFED</h1>
+                <p>Formation en Cybersécurité</p>
+            </div>
+            
+            <div class="form-container">
+                <div id="form-content">
+                    <h2 style="color: #2c3e50; margin-bottom: 30px; text-align: center;">
+                        Inscription à la Formation
+                    </h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prenom">Prénom <span class="required">*</span></label>
+                            <input type="text" id="prenom" name="prenom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nom">Nom <span class="required">*</span></label>
+                            <input type="text" id="nom" name="nom" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Adresse e-mail <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="telephone">Téléphone</label>
+                            <input type="tel" id="telephone" name="telephone">
+                        </div>
+                        <div class="form-group">
+                            <label for="entreprise">Entreprise/Organisation</label>
+                            <input type="text" id="entreprise" name="entreprise">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="poste">Poste actuel</label>
+                        <input type="text" id="poste" name="poste">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="formation">Formation souhaitée <span class="required">*</span></label>
+                            <select id="formation" name="formation" required>
+                                <option value="">Sélectionnez une formation</option>
+                                <option value="securite-base">Sécurité Informatique - Niveau Base</option>
+                                <option value="securite-avance">Sécurité Informatique - Niveau Avancé</option>
+                                <option value="pentest">Tests d'Intrusion (Pentest)</option>
+                                <option value="forensic">Informatique Légale</option>
+                                <option value="iso27001">ISO 27001</option>
+                                <option value="gdpr">RGPD et Conformité</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="niveau">Niveau d'expérience <span class="required">*</span></label>
+                            <select id="niveau" name="niveau" required>
+                                <option value="">Sélectionnez votre niveau</option>
+                                <option value="debutant">Débutant</option>
+                                <option value="intermediaire">Intermédiaire</option>
+                                <option value="avance">Avancé</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="motivation">Motivation et objectifs</label>
+                        <textarea id="motivation" name="motivation" placeholder="Décrivez vos motivations et objectifs pour cette formation..."></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="newsletter" name="newsletter">
+                        <label for="newsletter">Je souhaite recevoir la newsletter SINFED</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="conditions" name="conditions" required>
+                        <label for="conditions">J'accepte les conditions générales <span class="required">*</span></label>
+                    </div>
+
+                    <button type="button" class="submit-btn" onclick="submitForm()">
+                        S'inscrire à la formation
+                    </button>
+                </div>
+
+                <div id="success-message" class="success-message">
+                    <h3>🎉 Inscription réussie !</h3>
+                    <p>Merci pour votre inscription. Vous recevrez bientôt un e-mail de confirmation avec tous les détails de la formation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Créer les particules d'arrière-plan
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Démarrer l'animation d'introduction
+        function startIntroAnimation() {
+            setTimeout(() => {
+                // Masquer la scène d'introduction
+                document.getElementById('introScene').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('introScene').style.display = 'none';
+                    // Afficher le contenu principal
+                    document.getElementById('mainContainer').classList.add('show');
+                }, 1000);
+            }, 5500);
+        }
+
+        function submitForm() {
+            // Validation basique
+            const requiredFields = document.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#e74c3c';
+                    field.style.animation = 'shake 0.5s ease-in-out';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e0e6ed';
+                    field.style.animation = '';
+                }
+            });
+
+            if (!isValid) {
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return;
+            }
+
+            // Animation du bouton
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerHTML = '<span style="display: inline-block; animation: spin 1s linear infinite;">⚙️</span> Inscription en cours...';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('form-content').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+            }, 2000);
+        }
+
+        // Ajout de l'animation shake pour les erreurs
+        const shakeStyle = document.createElement('style');
+        shakeStyle.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(shakeStyle);
+
+        // Initialiser tout au chargement
+        window.addEventListener('load', () => {
+            createParticles();
+            startIntroAnimation();
+        });
+
+        // Permettre de passer l'intro en cliquant
+        document.getElementById('introScene').addEventListener('click', () => {
+            document.getElementById('introScene').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('introScene').style.display = 'none';
+                document.getElementById('mainContainer').classList.add('show');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
